@@ -16,14 +16,15 @@ df['FECHA']=pd.to_datetime(df['FECHA'], format="%d/%m/%Y")
 df = df.sort_values("FECHA")
 
 
-grouped = df.groupby("FECHA")
+#agrupa pero sólo uno por cada fecha por lo tanto no funciona
+
+""" grouped = df.groupby("FECHA")
 first_values = grouped.first()
+ """
 
-#first_values.to_csv('salida.csv')
+ #print(first_values)
 
-print(first_values)
 
-""" 
 
 ID={"CHAMPERICO FEGUA":"INS110701CV","COBAN":"INS160101CV","ESQUIPULAS":"INS200701CV","FLORES AEROPUERTO":"INS170101CV",\
     "LA AURORA":"INS010102CV"}
@@ -34,17 +35,28 @@ for k in ID:
     
     gk=df.groupby(['VARIABLE'])
     data=gk.get_group('LLUVIA')
+    temp=gk.get_group('TMED')
+    tempmin=gk.get_group('TMIN')
+    tempmax=gk.get_group('TMAX')
+
     variable=data[k]
+    temperatura=temp[k]
+    temperaturamin=tempmin[k]
+    temperaturamax=tempmax[k]
     fecha=data['FECHA']
     
     TOOLS = "save,pan,box_zoom,reset,wheel_zoom"
-    fig = figure(x_axis_type='datetime', title='',
-                 plot_height=200, plot_width=800, toolbar_location='below',
-                 y_axis_label="Precipitación (mm)", y_range=(-5, 90), background_fill_color='white', background_fill_alpha=0.6, tools=TOOLS)
+    fig = figure(x_axis_type='datetime', title=k,
+                 plot_height=400, plot_width=900, toolbar_location='below',
+                 y_axis_label="Valor", y_range=(-5, 90), background_fill_color='white', background_fill_alpha=0.6, tools=TOOLS)
     line = fig.line(fecha,variable,
-                    line_color="deepskyblue", line_width=1, legend_label=k)
-    #circle = fig.circle(data['FECHA'], data['LA AURORA'],
-     #                   fill_color="blue", line_color="blue", size=2)
+                    line_color="deepskyblue", line_width=1, legend_label='Precipitación (mm)')
+    line = fig.line(fecha,temperatura,
+                    line_color="green", line_width=1, legend_label='Temperatura C')
+    circle = fig.circle(fecha, temperaturamin,
+                        fill_color="black", line_color="blue", size=2, legend_label='Temperatura min C')
+    circle = fig.circle(fecha, temperaturamax,
+                        fill_color="black", line_color="red", size=2, legend_label='Temperatura max C')
     fig.add_tools(HoverTool(tooltips=[
                   ("Fecha", "@x{%d-%m-%Y}"), ("Valor", "$y{y.f}")], formatters={'@x': 'datetime', 'y': 'printf'}))
     fig.legend.location = 'top_left'
@@ -54,4 +66,4 @@ for k in ID:
     p = gridplot([[fig]])
 
     show(p)
- """
+ 
