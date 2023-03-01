@@ -16,6 +16,15 @@ df['FECHA']=pd.to_datetime(df['FECHA'], format="%d/%m/%Y")
 df = df.sort_values("FECHA")
 
 
+grouped = df.groupby("FECHA")
+first_values = grouped.first()
+
+#first_values.to_csv('salida.csv')
+
+print(first_values)
+
+""" 
+
 ID={"CHAMPERICO FEGUA":"INS110701CV","COBAN":"INS160101CV","ESQUIPULAS":"INS200701CV","FLORES AEROPUERTO":"INS170101CV",\
     "LA AURORA":"INS010102CV"}
         
@@ -45,3 +54,4 @@ for k in ID:
     p = gridplot([[fig]])
 
     show(p)
+ """
