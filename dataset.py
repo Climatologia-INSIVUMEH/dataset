@@ -42,20 +42,20 @@ for k in ID:
     fig.left[0].formatter.use_scientific = False
     
     # agregar el segundo eje para la temperatura
-    fig.extra_y_ranges = {"temp_range": Range1d(start=5, end=35)}
-    fig.add_layout(LinearAxis(y_range_name="temp_range", axis_label="Temperatura (C)"), 'right')
+    fig.extra_y_ranges = {"temp_range": Range1d(start=5, end=40)}
+    fig.add_layout(LinearAxis(y_range_name="temp_range", axis_label="Temperatura (°C)"), 'right')
     
 
     # agregar las líneas y los círculos
-    fig.line(fecha, precip, line_color='navy', line_width=1, legend_label='Precipitación (mm)',
+    fig.line(fecha, precip, line_color='navy', line_width=1, legend_label='Precipitación',
              name='precip')
     
-    fig.line(fecha, temp, line_color='seagreen', line_width=1, line_dash='dashed', legend_label='Temperatura media C', 
+    fig.line(fecha, temp, line_color='seagreen', line_width=1, line_dash='dashed', legend_label='Temperatura media', 
              name='temp',y_range_name='temp_range')
     fig.circle(fecha, tempmin, fill_color='deepskyblue', line_color='blue', size=2,
-               legend_label='Temperatura min C', name='tempmin',y_range_name='temp_range')
+               legend_label='Temperatura min', name='tempmin',y_range_name='temp_range')
     fig.circle(fecha, tempmax, fill_color='firebrick', line_color='red', size=2,
-               legend_label='Temperatura max C', name='tempmax',y_range_name='temp_range')
+               legend_label='Temperatura max', name='tempmax',y_range_name='temp_range')
 
     fig.legend.location = 'top_left'
     fig.title.text_font_size = '15pt'
@@ -75,4 +75,8 @@ for k in ID:
 
     # generar el archivo html y mostrar la gráfica
     output_file(f'{directory}{k}.html')
+
+    fig.legend.background_fill_alpha = 0.5
+    fig.legend.label_text_font_size = "10pt"
+    fig.legend.spacing = 5
     save(fig)
