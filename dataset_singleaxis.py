@@ -1,5 +1,4 @@
 from bokeh.layouts import gridplot
-from bokeh.models import Range1d, LinearAxis
 from bokeh.models.tools import HoverTool
 from bokeh.plotting import figure, output_file, show
 import pandas as pd
@@ -24,6 +23,7 @@ last_month_data = df[df['FECHA'] >= first_day_of_last_month]
 ID = {"CHAMPERICO FEGUA": "INS110701CV", "COBAN": "INS160101CV", "ESQUIPULAS": "INS200701CV", 
       "FLORES AEROPUERTO": "INS170101CV", "LA AURORA": "INS010102CV"}
 
+# ...
 
 for k in ID:
     # filtrar los datos por la ubicación (k)
@@ -35,30 +35,20 @@ for k in ID:
     fecha = gk.get_group('LLUVIA')['FECHA']
     
     # configurar la figura
-
     fig = figure(x_axis_type='datetime', title=k, plot_height=400, plot_width=900, toolbar_location='below',
-                 y_axis_label="Precipitación (mm)", y_range=(-5, 90), background_fill_color='white', 
-                 background_fill_alpha=0.6, tools="save,pan,box_zoom,reset,wheel_zoom")
-    
-    fig.yaxis.axis_label_text_font_size = "15pt"
-    fig.title.text_font_size = '15pt'
-    fig.left[0].formatter.use_scientific = False
-    
-    # agregar el segundo eje en y
-    fig.extra_y_ranges = {"temp_range": Range1d(start=5, end=35)}
-    fig.add_layout(LinearAxis(y_range_name="temp_range", axis_label="Temperatura (C)"), 'right')
-    
+                 y_axis_label="Valor", y_range=(-5, 90), background_fill_color='white', background_fill_alpha=0.6,
+                 tools="save,pan,box_zoom,reset,wheel_zoom")
 
     # agregar las líneas y los círculos
     fig.line(fecha, precip, line_color='navy', line_width=1, legend_label='Precipitación (mm)',
              name='precip')
     
     fig.line(fecha, temp, line_color='seagreen', line_width=1, line_dash='dashed', legend_label='Temperatura media C', 
-             name='temp',y_range_name='temp_range')
+             name='temp')
     fig.circle(fecha, tempmin, fill_color='deepskyblue', line_color='blue', size=2,
-               legend_label='Temperatura min C', name='tempmin',y_range_name='temp_range')
+               legend_label='Temperatura min C', name='tempmin')
     fig.circle(fecha, tempmax, fill_color='firebrick', line_color='red', size=2,
-               legend_label='Temperatura max C', name='tempmax',y_range_name='temp_range')
+               legend_label='Temperatura max C', name='tempmax')
 
     fig.legend.location = 'top_left'
     fig.title.text_font_size = '15pt'
