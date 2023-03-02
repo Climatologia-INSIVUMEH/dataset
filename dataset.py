@@ -2,9 +2,10 @@ from bokeh.models import Range1d, LinearAxis
 from bokeh.models.tools import HoverTool
 from bokeh.plotting import figure, output_file
 import pandas as pd
-from bokeh.io import save
+from bokeh.io import save, export_png
 
-directory = "/home/charmeleon/Documents/INSIVUMEH/dataset/output/"
+#directory = "/home/charmeleon/Documents/INSIVUMEH/dataset/output/"
+directory="output/"
 df = pd.read_csv('database.csv', header=1, delimiter=',')
 
 # convertir la columna FECHA a formato datetime y ordenar el dataframe
