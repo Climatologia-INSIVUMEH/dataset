@@ -1,6 +1,5 @@
-from bokeh.layouts import gridplot
 from bokeh.models.tools import HoverTool
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure, output_file
 import pandas as pd
 from bokeh.io import save
 
@@ -20,13 +19,14 @@ first_day_of_last_month = latest_date.replace(day=1) - pd.DateOffset(months=1)
 # Filtrar los datos para que solo incluyan los del último mes
 last_month_data = df[df['FECHA'] >= first_day_of_last_month]
 
+#Estaciones
 ID = {"CHAMPERICO FEGUA": "INS110701CV", "COBAN": "INS160101CV", "ESQUIPULAS": "INS200701CV", 
       "FLORES AEROPUERTO": "INS170101CV", "LA AURORA": "INS010102CV"}
 
 # ...
 
 for k in ID:
-    # filtrar los datos por la ubicación (k)
+    # filtrar los datos por la estación (k)
     gk = last_month_data.groupby(['VARIABLE'])
     precip = gk.get_group('LLUVIA')[k]
     temp = gk.get_group('TMED')[k]
@@ -39,7 +39,7 @@ for k in ID:
                  y_axis_label="Valor", y_range=(-5, 90), background_fill_color='white', background_fill_alpha=0.6,
                  tools="save,pan,box_zoom,reset,wheel_zoom")
 
-    # agregar las líneas y los círculos
+    # agregar las líneas y los círculos de temperatura
     fig.line(fecha, precip, line_color='navy', line_width=1, legend_label='Precipitación (mm)',
              name='precip')
     
@@ -66,6 +66,6 @@ for k in ID:
                       )
     fig.add_tools(hover)
 
-    # generar el archivo html y mostrar la figura
+    # generar el archivo html y mostrar la gráfica
     output_file(f'{directory}{k}.html')
     save(fig)
