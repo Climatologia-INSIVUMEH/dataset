@@ -1,58 +1,75 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import plotly.graph_objects as go
-from bokeh.io import export_png
-
-from bokeh.io import output_file
-# para visualizar el resultado
-from bokeh.plotting import figure, show, gridplot
-#from bokeh.models import ColumnDataSource
+from bokeh.layouts import gridplot
 from bokeh.models.tools import HoverTool
+from bokeh.plotting import figure, output_file, show
+import pandas as pd
+from bokeh.io import save
 
-directory="/home/charmeleon/Documents/INSIVUMEH/dataset/output/"  
+directory = "/home/charmeleon/Documents/INSIVUMEH/dataset/output/"
+df = pd.read_csv('database.csv', header=1, delimiter=',')
 
-df = pd.read_csv('database.csv', header=1,delimiter=',')
-df['FECHA']=pd.to_datetime(df['FECHA'], format="%d/%m/%Y")
+# convertir la columna FECHA a formato datetime y ordenar el dataframe
+df['FECHA'] = pd.to_datetime(df['FECHA'], format="%d/%m/%Y")
 df = df.sort_values("FECHA")
 
+# Obtener la fecha más reciente en el dataframe
+latest_date = df['FECHA'].max()
 
-ID={"CHAMPERICO FEGUA":"INS110701CV","COBAN":"INS160101CV","ESQUIPULAS":"INS200701CV","FLORES AEROPUERTO":"INS170101CV",\
-    "LA AURORA":"INS010102CV"}
+# Obtener el primer día del último mes
+first_day_of_last_month = latest_date.replace(day=1) - pd.DateOffset(months=1)
+
+# Filtrar los datos para que solo incluyan los del último mes
+last_month_data = df[df['FECHA'] >= first_day_of_last_month]
+
+ID = {"CHAMPERICO FEGUA": "INS110701CV", "COBAN": "INS160101CV", "ESQUIPULAS": "INS200701CV", 
+      "FLORES AEROPUERTO": "INS170101CV", "LA AURORA": "INS010102CV"}
+
+colors = ["deepskyblue", "green", "black", "red"]
+
+
+from bokeh.models import HoverTool
+
+# ...
 
 for k in ID:
+    # filtrar los datos por la ubicación (k)
+    gk = last_month_data.groupby(['VARIABLE'])
+    precip = gk.get_group('LLUVIA')[k]
+    temp = gk.get_group('TMED')[k]
+    tempmin = gk.get_group('TMIN')[k]
+    tempmax = gk.get_group('TMAX')[k]
+    fecha = gk.get_group('LLUVIA')['FECHA']
     
-    output_file(''+directory+''+k+'.html')
-    
-    gk=df.groupby(['VARIABLE'])
-    precip=gk.get_group('LLUVIA')
-    temp=gk.get_group('TMED')
-    tempmin=gk.get_group('TMIN')
-    tempmax=gk.get_group('TMAX')
+    # configurar la figura
+    fig = figure(x_axis_type='datetime', title=k, plot_height=400, plot_width=900, toolbar_location='below',
+                 y_axis_label="Valor", y_range=(-5, 90), background_fill_color='white', background_fill_alpha=0.6,
+                 tools="save,pan,box_zoom,reset,wheel_zoom")
 
-    precipitacion=precip[k]
-    temperatura=temp[k]
-    temperaturamin=tempmin[k]
-    temperaturamax=tempmax[k]
-    fecha=precip['FECHA']
-    
-    TOOLS = "save,pan,box_zoom,reset,wheel_zoom"
-    fig = figure(x_axis_type='datetime', title=k,
-                 plot_height=400, plot_width=900, toolbar_location='below',
-                 y_axis_label="Valor", y_range=(-5, 90), background_fill_color='white', background_fill_alpha=0.6, tools=TOOLS)
-    line = fig.line(fecha,precipitacion,
-                    line_color="deepskyblue", line_width=1, legend_label='Precipitación (mm)')
-    line = fig.line(fecha,temperatura,
-                    line_color="green", line_width=1, legend_label='Temperatura C')
-    circle = fig.circle(fecha, temperaturamin,
-                        fill_color="black", line_color="blue", size=2, legend_label='Temperatura min C')
-    circle = fig.circle(fecha, temperaturamax,
-                        fill_color="black", line_color="red", size=2, legend_label='Temperatura max C')
-    fig.add_tools(HoverTool(tooltips=[
-                  ("Fecha", "@x{%d-%m-%Y}"), ("Valor", "$y{y.f}")], formatters={'@x': 'datetime', 'y': 'printf'}))
+    # agregar las líneas y los círculos
+    fig.line(fecha, precip, line_color='navy', line_width=1, legend_label='Precipitación (mm)',
+             name='precip')
+    fig.line(fecha, temp, line_color='seagreen', line_width=1, line_dash='dashed', legend_label='Temperatura media C', 
+             name='temp')
+    fig.circle(fecha, tempmin, fill_color='deepskyblue', line_color='blue', size=2,
+               legend_label='Temperatura min C', name='tempmin')
+    fig.circle(fecha, tempmax, fill_color='firebrick', line_color='red', size=2,
+               legend_label='Temperatura max C', name='tempmax')
+
     fig.legend.location = 'top_left'
     fig.title.text_font_size = '15pt'
     fig.yaxis.axis_label_text_font_size = "15pt"
+    
+    # agregar etiquetas a las líneas y los círculos
+    tooltips = [
+        ("Valor", "@y"),
+        ("Fecha", "@x{%F}")
+    ]
+    formatters = {
+        '@x': 'datetime'
+    }
+    hover = HoverTool(names=['precip', 'temp', 'tempmin', 'tempmax'], tooltips=tooltips, formatters=formatters
+                      )
+    fig.add_tools(hover)
 
-    p = gridplot([[fig]])
-
-    show(p)
+    # generar el archivo html y mostrar la figura
+    output_file(f'{directory}{k}.html')
+    save(fig)
