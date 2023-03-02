@@ -1,7 +1,6 @@
-from bokeh.layouts import gridplot
 from bokeh.models import Range1d, LinearAxis
 from bokeh.models.tools import HoverTool
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure, output_file
 import pandas as pd
 from bokeh.io import save
 
@@ -26,7 +25,7 @@ ID = {"CHAMPERICO FEGUA": "INS110701CV", "COBAN": "INS160101CV", "ESQUIPULAS": "
 
 
 for k in ID:
-    # filtrar los datos por la ubicación (k)
+    # filtrar los datos por la estación (k)
     gk = last_month_data.groupby(['VARIABLE'])
     precip = gk.get_group('LLUVIA')[k]
     temp = gk.get_group('TMED')[k]
@@ -34,8 +33,6 @@ for k in ID:
     tempmax = gk.get_group('TMAX')[k]
     fecha = gk.get_group('LLUVIA')['FECHA']
     
-    # configurar la figura
-
     fig = figure(x_axis_type='datetime', title=k, plot_height=400, plot_width=900, toolbar_location='below',
                  y_axis_label="Precipitación (mm)", y_range=(-5, 90), background_fill_color='white', 
                  background_fill_alpha=0.6, tools="save,pan,box_zoom,reset,wheel_zoom")
@@ -44,7 +41,7 @@ for k in ID:
     fig.title.text_font_size = '15pt'
     fig.left[0].formatter.use_scientific = False
     
-    # agregar el segundo eje en y
+    # agregar el segundo eje para la temperatura
     fig.extra_y_ranges = {"temp_range": Range1d(start=5, end=35)}
     fig.add_layout(LinearAxis(y_range_name="temp_range", axis_label="Temperatura (C)"), 'right')
     
@@ -76,6 +73,6 @@ for k in ID:
                       )
     fig.add_tools(hover)
 
-    # generar el archivo html y mostrar la figura
+    # generar el archivo html y mostrar la gráfica
     output_file(f'{directory}{k}.html')
     save(fig)
