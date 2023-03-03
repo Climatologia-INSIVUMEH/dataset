@@ -12,7 +12,7 @@ df = pd.read_csv('database.csv', header=1, delimiter=',')
 # convertir la columna FECHA a formato datetime y ordenar el dataframe
 df['FECHA'] = pd.to_datetime(df['FECHA'], format="%d/%m/%Y")
 df = df.sort_values("FECHA")
-
+#
 # Obtener la fecha más reciente en el dataframe
 latest_date = df['FECHA'].max()
 
