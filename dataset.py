@@ -4,6 +4,7 @@ from bokeh.plotting import figure, output_file
 import pandas as pd
 from bokeh.io import save, export_png
 
+
 #directory = "/home/charmeleon/Documents/INSIVUMEH/dataset/output/"
 directory="output/"
 df = pd.read_csv('database.csv', header=1, delimiter=',')
@@ -21,8 +22,12 @@ first_day_of_last_month = latest_date.replace(day=1) - pd.DateOffset(months=1)
 # Filtrar los datos para que solo incluyan los del último mes
 last_month_data = df[df['FECHA'] >= first_day_of_last_month]
 
-ID = {"CHAMPERICO FEGUA": "INS110701CV", "COBAN": "INS160101CV", "ESQUIPULAS": "INS200701CV", 
-      "FLORES AEROPUERTO": "INS170101CV", "LA AURORA": "INS010102CV"}
+
+
+ID={"CHAMPERICO FEGUA":"INS110701CV","COBAN":"INS160101CV","ESQUIPULAS":"INS200701CV","FLORES AEROPUERTO":"INS170101CV",\
+    "LA AURORA":"INS010102CV","LA FRAGUA":"INS190201CV","LOS ALTOS":"INS090101CV","MONTUFAR":"INS221401CV",\
+    "PUERTO BARRIOS PHC":"INS180101CV","HUEHUETENANGO":"INS130101CV","POPTUN":"INS171201CV","SAN JOSE AEROPUERTO":"INS050901CV","TECUN UMAN":"INS121701CV","RETALHULEU AEROPUERTO":"INS110101CV",\
+   }
 
 
 for k in ID:
@@ -81,3 +86,7 @@ for k in ID:
     fig.legend.label_text_font_size = "10pt"
     fig.legend.spacing = 5
     save(fig)
+    export_png(fig, filename=f"{directory}{k}.png")
+
+
+
