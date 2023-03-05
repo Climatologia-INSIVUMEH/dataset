@@ -7,6 +7,7 @@ from bokeh.io import save, export_png
 
 #directory = "/home/charmeleon/Documents/INSIVUMEH/dataset/output/"
 directory="output/"
+directory2="img/"
 df = pd.read_csv('database.csv', header=1, delimiter=',')
 
 # convertir la columna FECHA a formato datetime y ordenar el dataframe
@@ -39,12 +40,12 @@ for k in ID:
     tempmax = gk.get_group('TMAX')[k]
     fecha = gk.get_group('LLUVIA')['FECHA']
     
-    fig = figure(x_axis_type='datetime', title=k, plot_height=400, plot_width=900, toolbar_location='below',
+    fig = figure(x_axis_type='datetime', title=k, plot_height=300, plot_width=800, toolbar_location='below',
                  y_axis_label="Precipitación (mm)", y_range=(-5, 90), background_fill_color='white', 
                  background_fill_alpha=0.6, tools="save,pan,box_zoom,reset,wheel_zoom")
     
-    fig.yaxis.axis_label_text_font_size = "15pt"
-    fig.title.text_font_size = '15pt'
+    fig.yaxis.axis_label_text_font_size = "5pt"
+    fig.title.text_font_size = '5pt'
     fig.left[0].formatter.use_scientific = False
     
     # agregar el segundo eje para la temperatura
@@ -64,8 +65,8 @@ for k in ID:
                legend_label='Temperatura max', name='tempmax',y_range_name='temp_range')
 
     fig.legend.location = 'top_left'
-    fig.title.text_font_size = '15pt'
-    fig.yaxis.axis_label_text_font_size = "15pt"
+    fig.title.text_font_size = '9pt'
+    fig.yaxis.axis_label_text_font_size = "9pt"
     
     # agregar etiquetas a las líneas y los círculos
     tooltips = [
@@ -83,10 +84,9 @@ for k in ID:
     output_file(f'{directory}{k}.html')
 
     fig.legend.background_fill_alpha = 0.5
-    fig.legend.label_text_font_size = "10pt"
+    fig.legend.label_text_font_size = "7pt"
     fig.legend.spacing = 5
     save(fig)
-    export_png(fig, filename=f"{directory}{k}.png")
-
+    export_png(fig, filename=f"{directory2}{k}.png")
 
 
