@@ -6,10 +6,15 @@ Las series de tiempo que genera son de precipitación, temperatura media, máxim
 
 
 Utilizando las bibliotecas pandas, bokeh y json.
- 
+
 Para guardar los html como imagen se debe de especficiar donde está en driver de chrome 
 Por ejemplo
     export PATH=$PATH:/home/rainy/Downloads/chromedriver_linux64
 
 Este puede ser descargado desde: 
     https://chromedriver.chromium.org/
+
+Ejemplo de la salida de este programa:
+
+![Gráfica](img/SUIZA CONTENTA.png)
+
