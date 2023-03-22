@@ -16,5 +16,5 @@ Este puede ser descargado desde:
 
 Ejemplo de la salida de este programa:
 
-![Gráfica](img/SUIZA CONTENTA.png)
+![Gráfica](https://raw.githubusercontent.com/Climatologia-INSIVUMEH/dataset/master/img/COBAN.png?token=GHSAT0AAAAAAB5LMDEBJ45DQTYINQXPSGVCZA3IDJQ)
 
