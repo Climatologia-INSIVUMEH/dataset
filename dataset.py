@@ -84,4 +84,3 @@ for k in ID:
     fig.legend.spacing = 1
     save(fig)
     export_png(fig, filename=f"{directory2}{k}.png")
-
