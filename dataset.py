@@ -4,7 +4,8 @@ from bokeh.plotting import figure, output_file
 import pandas as pd
 import json
 from bokeh.io import save, export_png
-
+from selenium import webdriver
+driver = webdriver.Chrome(executable_path='/home/rainy/Downloads/chromedriver_linux64/chromedriver')
 
 #directory = "/home/charmeleon/Documents/INSIVUMEH/dataset/output/"
 directory="output/"
